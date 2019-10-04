@@ -5,6 +5,12 @@
             Rock, Paper, Scissors
         </title>
 
+        <meta charset="utf-8"/>
+    </head>
+
+    <body>
+        Open browser's console
+
         <script>
 
             function computerPlay() {
@@ -30,6 +36,9 @@
                 var msg;
                 var n;
 
+                console.log(player)
+                console.log(computer)
+
                 if (player === computer) {
                     n = 2;
                 }
@@ -41,13 +50,17 @@
 
                             if (computer === "paper") {
                                 n = 0;
-                            }             
+                            } else {
+                                n = 1;
+                            }    
                             break;
 
                         case "paper":
                             
                             if (computer === "scissors") {
                                 n = 0;
+                            } else {
+                                n = 1;
                             }
                             break;
 
@@ -55,10 +68,10 @@
                             
                             if (computer === "rock") {
                                 n = 0;
+                            } else {
+                                n = 1;
                             }
                             break;
-                        default:
-                            n = 1;
                     }
                 }
 
@@ -85,9 +98,5 @@
             // test
             console.log(playRound(playerSelection, computerSelection))
         </script>
-    </head>
-
-    <body>
-        Open browser's console
     </body>
 </html>
