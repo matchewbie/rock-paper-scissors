@@ -1,161 +1,137 @@
-function computerPlay() {
+function computerPlay() {   // computer selection
 
-    // returns random integer from 0-9
-    var randomNum=  Math.floor(Math.random() * 10);
-
-    if (randomNum >= 0 && randomNum <= 3) {
-        return "rock";
-    }
-    else if (randomNum >=4 && randomNum <= 6) {
-        return "paper";
-    }
-    else {
-        return "scissors";
-    }
+    var choice = ["rock", "paper", "scissors"];
+    
+    // randomize computer CHOICE
+    return choice[Math.floor(Math.random() * choice.length)];
 }
 
 
 
-function playerPlay() {
+function playRound(playerSelection, computerSelection) {    // the workhorse of the game
 
-    var selectRPS = null;
-    var pick = true;
+    var msg;    // message to be built to display winner/loser/draw and player/computer selections
+    var rating; // player rating: 0 = loser, 1 = winner, 2 = draw
 
-    while (pick) {
+    // determine if draw
+    if (playerSelection === computerSelection) {
 
-        selectRPS = prompt("Please choose: Rock, Paper, Scissors?", "");
-
-        if (selectRPS !== null)
-        {
-            selectRPS = selectRPS.toLowerCase();
-
-            switch(selectRPS) {
-                
-                case "rock":
-                    pick = false;
-                    break;
-
-                case "paper":
-                    pick = false;
-                    break;
-
-                case "scissors":
-                    pick = false;
-            }
-        }
-    }
-
-    return selectRPS;
-}
-
-
-
-function playRound(playerSelection, computerSelection) {
-
-    var player = playerSelection.toLowerCase();
-    var computer = computerSelection.toLowerCase();
-    var msg;
-    var n;
-
-    if (player === computer) {
-        n = 2;
+        rating = 2;
     }
     else {
 
-        switch(player) {
+        switch(playerSelection) {   // use player decision to guage RATING vs computer
 
             case "rock":
 
-                if (computer === "paper") {
-                    n = 0;
-                } else {
-                    n = 1;
+                if (computerSelection == "paper") {
+
+                    rating = 0;
+                }
+                else {
+                    rating = 1;
                 }    
                 break;
 
             case "paper":
                 
-                if (computer === "scissors") {
-                    n = 0;
-                } else {
-                    n = 1;
+                if (computerSelection == "scissors") {
+
+                    rating = 0;
+                }
+                else {
+                    rating = 1;
                 }
                 break;
 
             case "scissors":
                 
-                if (computer === "rock") {
-                    n = 0;
-                } else {
-                    n = 1;
+                if (computerSelection == "rock") {
+
+                    rating = 0;
                 }
-                break;
+                else {
+                    rating = 1;
+                }
+
         }
     }
 
-    switch(n) {
+    switch(rating) {    // determine message to be displayed and which scores to update
 
         case 0:
-            msg = "You lose! " + computer.toUpperCase() + " beats " + player.toUpperCase();
+            msg = "Loser! " + computerSelection.toUpperCase() + " beats " + playerSelection.toUpperCase();
+            
+            // increase computer score (on scoreboard AND in the SCORE OBJECT's COMPUTER property value)
+            scoreboard.children.cScore.textContent = ++score.computer;
             break;
 
         case 1:
-            msg = "You win! " + player.toUpperCase() + " beats " + computer.toUpperCase();
+            msg = "Winner! " + playerSelection.toUpperCase() + " beats " + computerSelection.toUpperCase();
+            
+            // increase player score (on scoreboard AND in the SCORE OBJECT's PLAYER property value)
+            scoreboard.children.pScore.textContent = ++score.player;
             break;
         
         case 2:
-            msg = "It was a tie! " + player.toUpperCase() + " and " + computer.toUpperCase();
+            msg = "Draw. " + playerSelection.toUpperCase() + " and " + computerSelection.toUpperCase();
     }
 
-    console.log(msg);
+    // update message stating round results
+    scoreboard.children.results.textContent = msg;
 
-    return n;
-}
+    // create ARRAY of SCORE OBJECT - use FIND to see whether PLAYER or COMPUTER is at 5 for end of game
+    if (Object.values(score).find(win => win == 5)) {
 
+        // remove each gameplay button
+        btns.forEach( btn => {
 
+            document.body.children.container.removeChild(btn);
+        });
+        
+        // grey the container and 50% opacity on player choice text
+        document.body.children.container.style.backgroundColor = "grey";
+        document.body.children.container.children.choice.classList.add('opacity');
 
-function game() {
+        // figure rightful champion
+        if (score.player > score.computer) {
 
-    var player = 0;
-    var computer = 0;
-    var i;
-    
-    for (i = 0; i < 5; i++) {
-
-        var playerSelection = playerPlay();
-        var computerSelection = computerPlay();
-
-        var round = playRound(playerSelection, computerSelection);
-
-        switch(round) {
-
-            case 0:
-                computer++;
-                break;
-
-            case 1:
-                player++;
-                break;
-
-            case 2:
-                computer++;
-                player++;
+            winner.textContent = "YOU are the CHAMPION!";
+        }
+        else {
+            winner.textContent = "COMPUTER is the CHAMPION!"
         }
 
-        console.log("Player: " + player + " Computer: " + computer);
-    }
-    
-    if (player > computer) {
-        console.log("You are the CHAMPION!");
-    }
-    else if (player < computer) {
-        console.log("Computer is the CHAMPION!");
-    }
-    else {
-        console.log("TIE GAME! Play another five rounds.");
+        // update DOM with final champion and option to play again
+        document.body.children.container.appendChild(winner);
+        document.body.children.container.appendChild(refresh);
     }
 }
 
 
+
+function game() {   // ready to play
+
+    // wait for click on each gameplay button. player choice is represented by button's id
+    btns.forEach(btn => btn.addEventListener('click', () => playRound( btn.id, computerPlay() )));
+} 
+
+
+
+// store gameplay buttons and scoreboard
+const btns = document.querySelectorAll('button');
+const scoreboard = document.getElementById('scoreboard');
+
+// create element and apply styling for displaying champion at end of game
+const winner = document.createElement('h1');
+winner.classList.add('winner');
+
+// create element and apply styling for displaying play again at end of game
+const refresh = document.createElement('h3');
+refresh.classList.add('refresh', 'opacity');
+refresh.textContent = "refresh browser to play again";
+
+// score tracker object
+let score = {player: 0, computer: 0};
 
 game();

@@ -1,16 +1,31 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+
         <title>
-            Rock, Paper, Scissors
+            ROCK. PAPER. SCISSORS.
         </title>
 
-        <meta charset="utf-8"/>
+        <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
     </head>
 
     <body>
-        Open browser's console
+        <div id="container">
+            <h1 id="choice">if you would, please choose:</h3>
+            <button id="rock">ROCK</button>
+            <button id="paper">PAPER</button>
+            <button id="scissors">SCISSORS</button>
+            <div id="scoreboard">
+                <h3 class="score">Player</h3>
+                <h3 class="score">Computer</h3>
+                <h2 id="pScore">0</h2>
+                <h2 id="cScore">0</h2>
+                <p id="results"></p>
+            </div>
+        </div>
 
-        <script src="js/script.js"></script>
+        <script type="text/javascript" src="js/script.js"></script>
     </body>
 </html>

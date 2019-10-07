@@ -1,5 +1,5 @@
 Rock, Paper, Scissors
 
-- Make sure to open the console in the browser
+- I learned quite a bit about DOM manipulation basics for this project.
 
-completed in less than 3 hours after subtracting breaks
+from THE ODIN PROJECT
